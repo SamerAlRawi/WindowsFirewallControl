@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using FirewallControl.Properties;
 
 namespace FirewallControl
 {
@@ -15,25 +16,32 @@ namespace FirewallControl
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var bmp = new Bitmap(Properties.Resources.shield);
-            var icon = Icon.FromHandle(bmp.GetHicon());
             _trayIcon = new NotifyIcon
             {
-                Text = "Firewall Control",
-                Icon = icon
+                Text = Resources.TrayTitle,
+                Icon = BuildIconFromResources(),
+                ContextMenu = BuildContextMenu(),
+                Visible = true
             };
-
-            var trayMenu = new ContextMenu();
-            trayMenu.MenuItems.Add("Start", Start);
-            trayMenu.MenuItems.Add("Stop", Stop);
-            trayMenu.MenuItems.Add("Exit", Exit);
-
-            _trayIcon.ContextMenu = trayMenu;
-            _trayIcon.Visible = true;
 
             Application.Run();
 
             Console.Read();
+        }
+
+        private static Icon BuildIconFromResources()
+        {
+            var bmp = new Bitmap(Resources.shield);
+            return Icon.FromHandle(bmp.GetHicon());
+        }
+
+        private static ContextMenu BuildContextMenu()
+        {
+            var trayMenu = new ContextMenu();
+            trayMenu.MenuItems.Add("Start", Start);
+            trayMenu.MenuItems.Add("Stop", Stop);
+            trayMenu.MenuItems.Add("Exit", Exit);
+            return trayMenu;
         }
 
         private static void Start(object s, EventArgs a)
@@ -45,6 +53,7 @@ namespace FirewallControl
         {
             RunCommand("NetSh", "Advfirewall set allprofiles state off");
         }
+
         private static void RunCommand(string cmd, string args)
         {
             var p = new Process();
@@ -57,7 +66,7 @@ namespace FirewallControl
             p.StartInfo = processStartInfo;
             p.Start();
         }
-        
+
         private static void Exit(object s, EventArgs a)
         {
             _trayIcon.Visible = false;

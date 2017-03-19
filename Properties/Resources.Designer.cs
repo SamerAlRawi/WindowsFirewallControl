@@ -69,5 +69,14 @@ namespace FirewallControl.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firewall Control.
+        /// </summary>
+        internal static string TrayTitle {
+            get {
+                return ResourceManager.GetString("TrayTitle", resourceCulture);
+            }
+        }
     }
 }
